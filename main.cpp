@@ -23,7 +23,7 @@
 KRADIX_SORT_INIT( ksort, uint64_t, rskey, sizeof( uint64_t ) )
 
 static std::random_device random_device;
-static std::mt19937_64 rng( std::random_device() );
+static std::mt19937_64 rng( random_device() );
 static std::uniform_int_distribution<uint64_t> distribution_full;
 static std::uniform_int_distribution<uint32_t> distribution_limited_range;
 

@@ -1387,15 +1387,15 @@ static uint64_t *find_bucket_end_while_building_histogram(
 
 #define SMALL_BUCKET_THRESHOLD 64
 
-void polite_sort( uint64_t *begin, uint64_t *end )
+void polite_sort( uint64_t *data_begin, uint64_t *data_end )
 {
-  if( end - begin <= SMALL_BUCKET_THRESHOLD )
+  if( data_end - data_begin <= SMALL_BUCKET_THRESHOLD )
   {
-    sort_small_bucket( begin, end );
+    sort_small_bucket( data_begin, data_end );
     return;
   }
 
-  uint64_t *bucket_begin = begin;
+  uint64_t *bucket_begin = data_begin;
   int shift = 56;
   while( true )
   {
@@ -1405,7 +1405,7 @@ void polite_sort( uint64_t *begin, uint64_t *end )
     uint64_t *bucket_end;
 
     if(
-      end - bucket_begin > SMALL_BUCKET_THRESHOLD &&
+      data_end - bucket_begin > SMALL_BUCKET_THRESHOLD &&
       *( bucket_begin + SMALL_BUCKET_THRESHOLD ) <= in_bucket_max
     )
     {
@@ -1424,7 +1424,7 @@ void polite_sort( uint64_t *begin, uint64_t *end )
 
       bucket_end = find_bucket_end_while_building_histogram(
         bucket_begin,
-        end,
+        data_end,
         shift,
         in_bucket_max,
         u.child_bucket_counts
@@ -1508,9 +1508,9 @@ void polite_sort( uint64_t *begin, uint64_t *end )
     else
       // The current bucket has fewer elements than the small-bucket threshold.
       // As it was necessarily already sorted as the previous level, just find the end.
-      bucket_end = find_bucket_end( bucket_begin, end, in_bucket_max );
+      bucket_end = find_bucket_end( bucket_begin, data_end, in_bucket_max );
 
-    if( bucket_end == end ) // All done.
+    if( bucket_end == data_end ) // All done.
       return;
 
     // The next level to jump up or across to is the position of the highest differing byte, minus one.
